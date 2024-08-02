@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Get Started with Video Calling</title>
+    <script src="https://download.agora.io/sdk/release/AgoraRTC_N-4.21.0.js"></script>
+</head>
+<body>
+    <h2 class="left-align">Get Started with Video Calling</h2>
+    <div class="row">
+        <div>
+            <button type="button" id="join">Join</button>
+            <button type="button" id="leave">Leave</button>
+        </div>
+    </div>
+    <div id="video-container"></div>
+    <script>
+        const APP_ID = 'f98c6729633b44789032bc48a2896cba'; // Replace with your Agora App ID
+        const CHANNEL_NAME = 'My New Project'; // Replace with your channel name
+        const TOKEN = null; // Replace with your token if you have one
+
+        let client = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
+
+        async function startCall() {
+            client.on('user-published', async (user, mediaType) => {
+                await client.subscribe(user, mediaType);
+                if (mediaType === 'video') {
+                    const videoTrack = user.videoTrack;
+                    videoTrack.play('video-container');
+                }
+            });
+
+            client.on('user-unpublished', user => {
+                // Handle user leaving the call
+            });
+
+            await client.join(APP_ID, CHANNEL_NAME, TOKEN);
+            const [audioTrack, videoTrack] = await AgoraRTC.createMicrophoneAndCameraTracks();
+            await client.publish([audioTrack, videoTrack]);
+        }
+
+        document.getElementById('join').addEventListener('click', startCall);
+
+        document.getElementById('leave').addEventListener('click', async () => {
+            await client.leave();
+            document.getElementById('video-container').innerHTML = '';
+        });
+    </script>
+</body>
+</html>

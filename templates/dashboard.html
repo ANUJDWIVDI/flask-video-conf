@@ -46,4 +46,45 @@
     </div>
   </div>
 </div>
+
+<!-- Create Meeting Button -->
+<h2>Create a Meeting</h2>
+<a href="/test" class="btn btn-success">Create Meeting</a>
+
+<!-- Meeting Creation and Joining
+<h2>Create a Meeting</h2>
+<form action="{{ url_for('create_meeting') }}" method="POST">
+    <div class="form-group">
+        <label for="invitees">Invitees (comma-separated emails):</label>
+        <input type="text" id="invitees" name="invitees" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-success">Create Meeting</button>
+</form>
+
+<h2>Join a Meeting</h2>
+<form action="{{ url_for('join_meeting') }}" method="POST">
+    <div class="form-group">
+        <label for="code">Meeting Code:</label>
+        <input type="text" id="code" name="code" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Join Meeting</button>
+</form>
+
+{% if meeting_link %}
+    <h3>Meeting Link</h3>
+    <div class="form-group">
+        <input type="text" id="meetingLink" value="{{ meeting_link }}" class="form-control" readonly>
+    </div>
+    <button onclick="copyToClipboard()" class="btn btn-info">Copy Link</button> --> 
+{% endif %}
+
+<script>
+function copyToClipboard() {
+    var copyText = document.getElementById("meetingLink");
+    copyText.select();
+    copyText.setSelectionRange(0, 99999); // For mobile devices
+    document.execCommand("copy");
+    alert("Meeting link copied to clipboard: " + copyText.value);
+}
+</script>
 {% endblock %}

@@ -1,3 +1,4 @@
+<!-- templates/register.html -->
 {% extends "base.html" %}
 
 {% block title %}Register{% endblock %}
@@ -45,7 +46,6 @@
 
     <button type="submit" id="submitBtn" disabled>Register</button>
 </form>
-
 
 <style>
     .container {
@@ -119,12 +119,10 @@
 </style>
 
 <script>
-    
 document.getElementById('registerForm').addEventListener('input', function() {
     const form = this;
-    let isValid = form.checkValidity();
     const emailStatus = document.getElementById('email_status').textContent;
-    document.getElementById('submitBtn').disabled = !isValid || emailStatus === 'Email is already in use.';
+    document.getElementById('submitBtn').disabled = !form.checkValidity() || emailStatus === 'Email is already in use.';
 
     // Clear all error messages
     document.querySelectorAll('.error-message').forEach(msg => msg.textContent = '');
@@ -168,7 +166,9 @@ document.getElementById('togglePassword').addEventListener('click', function() {
 
 // Check email availability
 document.getElementById('checkEmailBtn').addEventListener('click', function() {
-    const email = document.getElementById('email').value;
+    const emailInput = document.getElementById('email');
+    const email = emailInput.value.toLowerCase();
+    emailInput.value = email;
     const emailStatus = document.getElementById('email_status');
     const emailError = document.getElementById('email_error');
 
@@ -195,7 +195,7 @@ document.getElementById('checkEmailBtn').addEventListener('click', function() {
             document.getElementById('submitBtn').disabled = true;
         } else {
             emailStatus.textContent = 'Email is available.';
-            document.getElementById('submitBtn').disabled = false;
+            document.getElementById('submitBtn').disabled = !document.getElementById('registerForm').checkValidity();
         }
     })
     .catch(error => {

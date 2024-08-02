@@ -1,0 +1,53 @@
+<!-- video_call.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Video Call</title>
+    <script src="https://download.agora.io/sdk/release/AgoraRTC_N-4.21.0.js"></script>
+</head>
+<body>
+    <h1>Video Call</h1>
+    <div id="local_stream"></div>
+    <div id="remote_stream"></div>
+
+    <script>
+        const appId = 'f98c6729633b44789032bc48a2896cba'; // Your Agora App ID
+        const channel = "{{ room_name }}"; // Meeting room name
+        const userName = "{{ user_name }}"; // Username passed from Flask
+
+        const client = AgoraRTC.createClient({ mode: 'rtc', codec: 'vp8' });
+        
+        client.init(appId, () => {
+            console.log('AgoraRTC client initialized');
+
+            client.join(null, channel, null, (uid) => { // No token used here
+                console.log('User ' + uid + ' joined channel successfully');
+                
+                // Create and publish local stream
+                const localStream = AgoraRTC.createStream({ streamID: uid, audio: true, video: true });
+                localStream.init(() => {
+                    console.log('Local stream initialized');
+                    localStream.play('local_stream');
+                    client.publish(localStream, (err) => console.log('Publish local stream error: ' + err));
+                }, (err) => console.log('Local stream init error: ' + err));
+
+                // Subscribe to remote streams
+                client.on('stream-added', (evt) => {
+                    const remoteStream = evt.stream;
+                    client.subscribe(remoteStream, (err) => console.log('Subscribe remote stream error: ' + err));
+                });
+
+                client.on('stream-subscribed', (evt) => {
+                    const remoteStream = evt.stream;
+                    remoteStream.play('remote_stream');
+                });
+
+                client.on('stream-removed', (evt) => {
+                    evt.stream.stop();
+                });
+            }, (err) => console.log('Join channel error: ' + err));
+        }, (err) => console.log('AgoraRTC client init error: ' + err));
+    </script>
+</body>
+</html>
