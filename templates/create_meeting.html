@@ -1,0 +1,16 @@
+<!---create_meeting.html, join_meeting.html, meeting.html - Templates related to meetings and chat.-->
+
+<!-- templates/create_meeting.html -->
+{% extends "base.html" %}
+
+{% block title %}Create Meeting{% endblock %}
+
+{% block content %}
+<h2>Create Meeting</h2>
+<form method="POST">
+    <label for="invitees">Invitees (comma-separated emails):</label>
+    <input type="text" id="invitees" name="invitees" required>
+    
+    <button type="submit">Create Meeting</button>
+</form>
+{% endblock %}

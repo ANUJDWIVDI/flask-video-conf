@@ -1,0 +1,16 @@
+<!---create_meeting.html, join_meeting.html, meeting.html - Templates related to meetings and chat.-->
+
+<!-- templates/join_meeting.html -->
+{% extends "base.html" %}
+
+{% block title %}Join Meeting{% endblock %}
+
+{% block content %}
+<h2>Join Meeting</h2>
+<form method="POST">
+    <label for="code">Meeting Code:</label>
+    <input type="text" id="code" name="code" required>
+    
+    <button type="submit">Join</button>
+</form>
+{% endblock %}

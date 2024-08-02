@@ -1,0 +1,207 @@
+{% extends "base.html" %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<h2>Register</h2>
+<form id="registerForm" method="POST">
+    <label for="full_name">Full Name:</label>
+    <input type="text" id="full_name" name="full_name" minlength="2" placeholder="John Doe" required>
+    <small id="full_name_error" class="error-message"></small>
+    
+    <label for="register_number">Register Number/USN:</label>
+    <input type="text" id="register_number" name="register_number" minlength="8" maxlength="15" placeholder="12345678" required>
+    <small id="register_number_error" class="error-message"></small>
+    
+    <label for="department">Department:</label>
+    <input type="text" id="department" name="department" placeholder="Computer Science" required>
+    <small id="department_error" class="error-message"></small>
+    
+    <label for="semester">Semester:</label>
+    <select id="semester" name="semester" required>
+        <option value="" disabled selected>Select your semester</option>
+        {% for i in range(1, 9) %}
+            <option value="{{ i }}">Semester {{ i }}</option>
+        {% endfor %}
+    </select>
+    <small id="semester_error" class="error-message"></small>
+    
+    <label for="phone_number">Phone Number:</label>
+    <input type="tel" id="phone_number" name="phone_number" pattern="[1-9][0-9]{9}" placeholder="9876543210" required>
+    <small id="phone_number_error" class="error-message"></small>
+    
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" placeholder="example@example.com" required>
+    <button type="button" id="checkEmailBtn">Check Email</button>
+    <small id="email_status" class="status-message"></small>
+    <small id="email_error" class="error-message"></small>
+
+    <label for="password">Password:</label>
+    <div style="display: flex; align-items: center;">
+        <input type="password" id="password" name="password" minlength="8" required>
+        <button type="button" id="togglePassword" style="margin-left: 10px;">Show</button>
+    </div>
+    <small id="password_error" class="error-message"></small>
+
+    <button type="submit" id="submitBtn" disabled>Register</button>
+</form>
+
+
+<style>
+    .container {
+        max-width: 600px;
+        margin: auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+    .container h2 {
+        margin-bottom: 20px;
+        font-size: 24px;
+        color: #333;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    label {
+        margin: 10px 0 5px;
+        font-weight: bold;
+        text-align: left;
+        width: 100%;
+        max-width: 400px;
+    }
+
+    input[type="text"], input[type="tel"], input[type="email"], select, input[type="password"] {
+        width: 100%;
+        max-width: 400px;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    button {
+        padding: 10px 20px;
+        margin-top: 10px;
+        font-size: 16px;
+        color: #fff;
+        background-color: #007bff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+    .error-message {
+        color: red;
+        font-size: 0.875em;
+        display: block;
+        margin-top: 0.25em;
+    }
+
+    .status-message {
+        color: green;
+        font-size: 0.875em;
+        display: block;
+        margin-top: 0.25em;
+    }
+</style>
+
+<script>
+    
+document.getElementById('registerForm').addEventListener('input', function() {
+    const form = this;
+    let isValid = form.checkValidity();
+    const emailStatus = document.getElementById('email_status').textContent;
+    document.getElementById('submitBtn').disabled = !isValid || emailStatus === 'Email is already in use.';
+
+    // Clear all error messages
+    document.querySelectorAll('.error-message').forEach(msg => msg.textContent = '');
+    document.getElementById('email_status').textContent = '';
+
+    // Check individual field validity
+    if (!document.getElementById('full_name').validity.valid) {
+        document.getElementById('full_name_error').textContent = 'Full Name must be at least 2 characters long.';
+    }
+    if (!document.getElementById('register_number').validity.valid) {
+        document.getElementById('register_number_error').textContent = 'Register Number/USN must be between 8 and 15 characters long.';
+    }
+    if (!document.getElementById('department').validity.valid) {
+        document.getElementById('department_error').textContent = 'Department is required.';
+    }
+    if (!document.getElementById('semester').validity.valid) {
+        document.getElementById('semester_error').textContent = 'Semester is required.';
+    }
+    if (!document.getElementById('phone_number').validity.valid) {
+        document.getElementById('phone_number_error').textContent = 'Phone Number must be a 10-digit Indian phone number without +91.';
+    }
+    if (!document.getElementById('email').validity.valid) {
+        document.getElementById('email_error').textContent = 'Please enter a valid email address.';
+    }
+    if (document.getElementById('password').value.length < 8 ||
+        !/[A-Z]/.test(document.getElementById('password').value) ||
+        !/[a-z]/.test(document.getElementById('password').value) ||
+        !/[0-9]/.test(document.getElementById('password').value) ||
+        !/[!@#$%^&*]/.test(document.getElementById('password').value)) {
+        document.getElementById('password_error').textContent = 'Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one digit, and one special character.';
+    }
+});
+
+// Toggle password visibility
+document.getElementById('togglePassword').addEventListener('click', function() {
+    const passwordField = document.getElementById('password');
+    const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+    passwordField.setAttribute('type', type);
+    this.textContent = type === 'password' ? 'Show' : 'Hide';
+});
+
+// Check email availability
+document.getElementById('checkEmailBtn').addEventListener('click', function() {
+    const email = document.getElementById('email').value;
+    const emailStatus = document.getElementById('email_status');
+    const emailError = document.getElementById('email_error');
+
+    // Basic email format validation
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(email)) {
+        emailError.textContent = 'Please enter a valid email address.';
+        emailStatus.textContent = '';
+        document.getElementById('submitBtn').disabled = true;
+        return;
+    }
+
+    fetch('/check-email', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email: email })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.exists) {
+            emailStatus.textContent = 'Email is already in use.';
+            document.getElementById('submitBtn').disabled = true;
+        } else {
+            emailStatus.textContent = 'Email is available.';
+            document.getElementById('submitBtn').disabled = false;
+        }
+    })
+    .catch(error => {
+        emailStatus.textContent = 'Error checking email.';
+        console.error('Error:', error);
+    });
+});
+</script>
+{% endblock %}

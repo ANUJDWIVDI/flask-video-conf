@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Meeting{% endblock %}
+
+{% block content %}
+<h2>Meeting Details</h2>
+<p>Meeting Code: <strong>{{ meeting.code }}</strong></p>
+<p>Host: {{ host_name }}</p>
+<p>Invitees: {{ invitees }}</p>
+
+<h3>Chat</h3>
+<form method="POST" action="{{ url_for('send_message') }}">
+    <input type="hidden" name="meeting_id" value="{{ meeting._id }}">
+    <label for="message">Message:</label>
+    <textarea id="message" name="message" required placeholder="Type your message here"></textarea>
+    
+    <button type="submit">Send</button>
+</form>
+
+<h3>Meeting Notes</h3>
+<form method="POST" action="{{ url_for('upload_meeting_notes') }}" enctype="multipart/form-data">
+    <label for="notes">Upload Meeting Notes (Excel file):</label>
+    <input type="file" id="notes" name="notes">
+    
+    <button type="submit">Upload</button>
+</form>
+
+{% endblock %}

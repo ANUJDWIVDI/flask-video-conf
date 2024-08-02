@@ -1,0 +1,14 @@
+<!-- templates/upload_meeting_notes.html -->
+{% extends "base.html" %}
+
+{% block title %}Upload Meeting Notes{% endblock %}
+
+{% block content %}
+<h2>Upload Meeting Notes</h2>
+<form method="POST" enctype="multipart/form-data">
+    <label for="notes">Select Notes File:</label>
+    <input type="file" id="notes" name="notes" required>
+    
+    <button type="submit">Upload Notes</button>
+</form>
+{% endblock %}

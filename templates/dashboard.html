@@ -1,0 +1,49 @@
+<!-- templates/dashboard.html -->
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<h2>Welcome, {{ user['full_name'] }}!</h2>
+<p>Email: {{ user['email'] }}</p>
+<p>Registration Date: {{ user['registration_date'] }}</p>
+<p>Department: {{ user['department'] }}</p>
+<p>Semester: {{ user['semester'] }}</p>
+<p>Phone Number: {{ user['phone_number'] }}</p>
+{% if user['profile_picture'] %}
+    <p><img src="{{ url_for('static', filename='uploads/' ~ user['profile_picture']) }}" alt="Profile Picture" width="150"></p>
+{% else %}
+    <p>No profile picture uploaded.</p>
+{% endif %}
+
+<!-- Button to Open the Modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#uploadModal">
+  Upload Profile Picture
+</button>
+
+<!-- The Modal -->
+<div class="modal" id="uploadModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Upload Profile Picture</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      
+      <!-- Modal Body -->
+      <div class="modal-body">
+        <form action="{{ url_for('upload_profile_picture') }}" method="post" enctype="multipart/form-data">
+          <div class="form-group">
+            <label for="profile_picture">Select Profile Picture:</label>
+            <input type="file" class="form-control-file" id="profile_picture" name="profile_picture">
+          </div>
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+      </div>
+      
+    </div>
+  </div>
+</div>
+{% endblock %}
